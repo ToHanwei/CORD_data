@@ -9,6 +9,8 @@ from tempfile import NamedTemporaryFile
 msafile = sys.argv[1]
 # template site
 sitefile = sys.argv[2]
+# outfile name
+outfile = sys.argv[3]
 
 
 def make_command(label, infile, outfile):
@@ -77,7 +79,6 @@ for parm in parms:
 	label = ','.join(sites[parm[0]:parm[1]])
 	labels.append(label)
 
-outfile = msafile.split('.')[0] + '.txt'
 fout = open(outfile, 'w')
 fout.write('fragment@@@svgstr@@@length###')
 for i, frag in enumerate(frags):

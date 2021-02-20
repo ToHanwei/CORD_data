@@ -6,6 +6,7 @@ from collections import Counter
 
 # MSA output format file
 msafile = sys.argv[1]
+outfile = sys.argv[2]
 
 # config
 names = [
@@ -36,7 +37,9 @@ sites = [Counter(site) for site in sites]
 cons = []
 for site in sites:
 	v = sorted(site.items(), key=lambda x: x[1], reverse=True)
-	if v[0][0] != "-":
+	if len(v) == 1:
+		con = v[0][0]
+	elif v[0][0] != "-":
 		con = v[0][0]
 	else:
 		con = v[1][0]
@@ -50,6 +53,11 @@ for site in sites:
 
 df = pd.DataFrame.from_dict(sites)
 df = (df / num_seqs) * 100
+cols = df.columns
+diff = set(names) - set(df.columns)
+if diff:
+    for aad in diff:
+        df[aad] = 0
 df = df[names]
 df.index = range(1, 311)
 df = df.round(2)
@@ -57,4 +65,4 @@ df.fillna(0, inplace=True)
 df['consensues'] = cons
 #points = [(309-i, j, df.iloc[i][j]) for i in range(310) for j in range(25)]
 
-df.to_csv("test.csv", index=False)
+df.to_csv(outfile, index=False)
